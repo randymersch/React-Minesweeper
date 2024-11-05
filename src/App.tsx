@@ -1,10 +1,11 @@
 import "./App.css";
+import Minesweeper from "./components/Minesweeper";
+ 
 
 function App() {
   return (
     <>
-      <h1 className="text-4xl text-red-600">Welcome to minesweeper</h1>
-      <div></div>
+      <Minesweeper />
     </>
   );
 }
