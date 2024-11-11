@@ -2,25 +2,36 @@ import { GameTileProp } from "./Minesweeper";
 
 interface TileProp {
   tileData: GameTileProp;
+  isGameOver: boolean;
   updateTileClick: any;
 }
 
-function Tile(tileData: TileProp) {
+function Tile(tileProp: TileProp) {
   return (
-    <button
-      className="w-6 h-6 border-solid border-gray-400 border-2"
-      onClick={() =>
-        tileData.updateTileClick(
-          tileData.tileData.x,
-          tileData.tileData.y,
-          false,
-        )
-      }
-    >
-      {tileData.tileData.isDisplayed ? "" : ""}
-      {tileData.tileData.isBomb ? "B" : "N"}
-      {tileData.tileData.isFlagged ? "" : ""}
-    </button>
+    <div className="w-6 h-6 border-solid border-gray-400 border-2">
+      {tileProp.tileData.isDisplayed ||
+        (tileProp.isGameOver && (
+          <>
+            {tileProp.tileData.isFlagged
+              ? ">"
+              : tileProp.tileData.isBomb
+                ? "B"
+                : tileProp.tileData.numberDisplay}
+          </>
+        ))}
+      {!tileProp.tileData.isDisplayed && (
+        <button
+          className="w-full h-full outline-offset-4 outline-stone-100 bg-white"
+          onClick={() =>
+            tileProp.updateTileClick(
+              tileProp.tileData.x,
+              tileProp.tileData.y,
+              false,
+            )
+          }
+        ></button>
+      )}
+    </div>
   );
 }
 
