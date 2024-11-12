@@ -12,9 +12,9 @@ function generateGameBoard(): GameTileProp[][] {
     Array(maxHeight).fill({} as GameTileProp),
   );
 
-  for (let y = 0; y < maxHeight; y++) {
-    for (let x = 0; x < maxWidth; x++) {
-      newGameBoard[x][y] = {
+  for (let x = 0; x < maxWidth; x++) {
+    for (let y = 0; y < maxHeight; y++) {
+      newGameBoard[y][x] = {
         isBomb: generateIsABomb(),
         isDisplayed: false,
         isFlagged: false,
@@ -26,24 +26,26 @@ function generateGameBoard(): GameTileProp[][] {
   }
 
   //calc the numbers
-  for (let y = 0; y < maxHeight; y++) {
-    for (let x = 0; x < maxWidth; x++) {
+  for (let x = 0; x < maxHeight; x++) {
+    for (let y = 0; y < maxWidth; y++) {
       const currentTile = newGameBoard[x][y];
 
       if (currentTile.isBomb) {
-        break;
+        //break;
       }
       const left = x > 0 && newGameBoard[x - 1][y].isBomb;
       const topLeft = x > 0 && y > 0 && newGameBoard[x - 1][y - 1].isBomb;
       const top = y > 0 && newGameBoard[x][y - 1].isBomb;
       const topRight =
-        x < maxWidth && y > 0 && newGameBoard[x + 1][y - 1].isBomb;
-      const right = x < maxWidth && newGameBoard[x + 1][y].isBomb;
+        x < maxWidth - 1 && y > 0 && newGameBoard[x + 1][y - 1].isBomb;
+      const right = x < maxWidth - 1 && newGameBoard[x + 1][y].isBomb;
       const rightBottom =
-        x < maxWidth && y < maxHeight && newGameBoard[x + 1][y + 1].isBomb;
-      const bottom = y < maxHeight && newGameBoard[x][y + 1].isBomb;
+        x < maxWidth - 1 &&
+        y < maxHeight - 1 &&
+        newGameBoard[x + 1][y + 1].isBomb;
+      const bottom = y < maxHeight - 1 && newGameBoard[x][y + 1].isBomb;
       const bottomLeft =
-        x > 0 && y < maxHeight && newGameBoard[x - 1][y + 1].isBomb;
+        x > 0 && y < maxHeight - 1 && newGameBoard[x - 1][y + 1].isBomb;
       const surroundingTiles = [
         left,
         topLeft,
@@ -57,8 +59,8 @@ function generateGameBoard(): GameTileProp[][] {
 
       let numBombs = 0;
 
-      console.log("surrounding");
-      console.log(surroundingTiles);
+      // console.log("surrounding");
+      // console.log(surroundingTiles);
       for (let i = 0; i < surroundingTiles.length; i++) {
         if (surroundingTiles[i]) {
           ++numBombs;
@@ -102,8 +104,11 @@ function Minesweeper() {
     y: number,
     isRightClick: boolean,
   ): void {
+    if (isGameOver || gameBoard[y][x].isDisplayed) {
+      return;
+    }
+
     const tile = gameBoard[x][y] as GameTileProp;
-    alert(`isBomb: ${tile.isBomb}`);
     if (!isRightClick) {
       tile.isDisplayed = true;
       if (tile.isBomb && !tile.isFlagged) {
@@ -118,7 +123,7 @@ function Minesweeper() {
     <>
       {isGameOver && <div>Game over!!</div>}
 
-      <div className="bg-gray-200 border-solid border-4 border-gray-500 w-56">
+      <div className="bg-gray-200 border-solid border-4 border-gray-500">
         <Banner
           gameBoard={gameBoard}
           isGameOver={isGameOver}

@@ -3,18 +3,17 @@ import Tile from "./Tile";
 interface TilesProps {
   gameBoard: GameTileProp[][];
   isGameOver: boolean;
-  updateTileClick: any;
+  updateTileClick: (x: number, y: number, isRightClick: boolean) => void;
 }
 
 function Tiles({ gameBoard, isGameOver, updateTileClick }: TilesProps) {
-  console.log("tiles");
-  console.log(gameBoard);
   return (
     <div>
       {gameBoard.map((row, x) => (
-        <div className="flex flex-row grid-rows-1">
-          {row.map((column) => (
+        <div key={x} className="flex flex-row">
+          {row.map((column, y) => (
             <Tile
+              key={`${x}, ${y}`}
               tileData={column}
               isGameOver={isGameOver}
               updateTileClick={updateTileClick}
