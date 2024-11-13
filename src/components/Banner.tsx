@@ -5,6 +5,8 @@ interface BannerProps {
   gameBoard: GameTileProp[][];
   isGameOver: boolean;
   startGameClick: () => void;
+  isMark: boolean;
+  toggleIsMark: () => void;
 }
 
 function getScore(gameBoard: GameTileProp[][]) {
@@ -21,7 +23,26 @@ function getScore(gameBoard: GameTileProp[][]) {
   return score.toString();
 }
 
-function Banner({ gameBoard, isGameOver, startGameClick }: BannerProps) {
+function getBombs(gameBoard: GameTileProp[][]) {
+  let bombs = 0;
+  for (let x = 0; x < gameBoard.length; x++) {
+    for (let y = 0; y < gameBoard[x].length; y++) {
+      if (gameBoard[y][x].isBomb && !gameBoard[y][x].isFlagged) {
+        bombs++;
+      }
+    }
+  }
+
+  return bombs.toString();
+}
+
+function Banner({
+  gameBoard,
+  isGameOver,
+  startGameClick,
+  isMark,
+  toggleIsMark,
+}: BannerProps) {
   const [timer, setTimer] = useState<number>(0);
 
   useEffect(() => {
@@ -36,8 +57,16 @@ function Banner({ gameBoard, isGameOver, startGameClick }: BannerProps) {
   }, [isGameOver, timer]);
 
   return (
-    <div className="border-solid border-gray-400 border-4 p-4 grid grid-cols-3">
-      <span className="text-red-700 font-bold">{getScore(gameBoard)}</span>
+    <div className="border-solid border-gray-400 border-4 p-4 grid grid-cols-4">
+      <label>
+        <input
+          type="checkbox"
+          checked={isMark}
+          onChange={() => toggleIsMark()}
+        />
+        {isMark ? "Mark" : "Click"}
+      </label>
+      <span className="text-red-700 font-bold">{getBombs(gameBoard)}</span>
 
       <button
         onClick={() => {

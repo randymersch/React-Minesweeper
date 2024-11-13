@@ -4,22 +4,26 @@ import { GameTileProp } from "./Minesweeper";
 interface TileProp {
   tileData: GameTileProp;
   isGameOver: boolean;
-  updateTileClick: (x: number, y: number, isRightClick: boolean) => void;
+  updateTileClick: (x: number, y: number) => void;
 }
 
 function Tile({ tileData, isGameOver, updateTileClick }: TileProp) {
   const [isDisplayed, setIsDisplayed] = useState<boolean>(tileData.isDisplayed);
-  const displayTile = isGameOver || isDisplayed;
+  const [isFlagged, setIsFlagged] = useState<boolean>(tileData.isFlagged);
+  const displayTile = isGameOver || (isDisplayed && !tileData.isFlagged);
 
-  // useEffect(() => {
-  //   console.log("changed: " + tileData.isDisplayed);
-  //   console.log(tileData.x);
-  // }, [tileData, updateTileClick]);
+  useEffect(() => {
+    setIsDisplayed(isGameOver || tileData.isDisplayed);
+  }, [isGameOver, tileData.isDisplayed]);
+
+  useEffect(() => {
+    setIsFlagged(tileData.isFlagged);
+  }, [isGameOver, tileData.isFlagged]);
 
   function localClick() {
-    console.log("local coffee");
-    updateTileClick(tileData.x, tileData.y, false);
+    updateTileClick(tileData.x, tileData.y);
     setIsDisplayed(true);
+    setIsFlagged(false);
   }
 
   return (
@@ -27,13 +31,11 @@ function Tile({ tileData, isGameOver, updateTileClick }: TileProp) {
       {displayTile && (
         <>
           <div>
-            {tileData.isFlagged
-              ? ">"
-              : tileData.isBomb
-                ? "B"
-                : tileData.numberDisplay === "0"
-                  ? ""
-                  : tileData.numberDisplay}
+            {tileData.isBomb
+              ? "B"
+              : tileData.numberDisplay === "0"
+                ? ""
+                : tileData.numberDisplay}
           </div>
           {/* {`${tileProp.tileData.x}, ${tileProp.tileData.y}`} */}
         </>
@@ -42,7 +44,9 @@ function Tile({ tileData, isGameOver, updateTileClick }: TileProp) {
         <button
           className="w-full h-full outline-offset-4 outline-stone-100 bg-white"
           onClick={() => localClick()}
-        ></button>
+        >
+          {isFlagged ? ">" : ""}
+        </button>
       )}
     </div>
   );

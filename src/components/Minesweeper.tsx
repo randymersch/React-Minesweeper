@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Banner from "./Banner";
 import Tiles from "./Tiles";
 
@@ -25,14 +25,11 @@ function generateGameBoard(): GameTileProp[][] {
     }
   }
 
-  //calc the numbers
   for (let x = 0; x < maxHeight; x++) {
     for (let y = 0; y < maxWidth; y++) {
       const currentTile = newGameBoard[x][y];
 
-      if (currentTile.isBomb) {
-        //break;
-      }
+      //TODO: refactor this to an array
       const left = x > 0 && newGameBoard[x - 1][y].isBomb;
       const topLeft = x > 0 && y > 0 && newGameBoard[x - 1][y - 1].isBomb;
       const top = y > 0 && newGameBoard[x][y - 1].isBomb;
@@ -58,9 +55,6 @@ function generateGameBoard(): GameTileProp[][] {
       ];
 
       let numBombs = 0;
-
-      // console.log("surrounding");
-      // console.log(surroundingTiles);
       for (let i = 0; i < surroundingTiles.length; i++) {
         if (surroundingTiles[i]) {
           ++numBombs;
@@ -94,28 +88,25 @@ export interface GameTileProp {
 function Minesweeper() {
   const [gameBoard, setGameBoard] = useState<GameTileProp[][]>([]);
   const [isGameOver, setIsGameOver] = useState<boolean>(true);
+  const [isMark, setIsMark] = useState<boolean>(false);
 
   function handleStartGameClick(): void {
     setIsGameOver(false);
     setGameBoard(generateGameBoard());
   }
-  function handleUpdateTileClick(
-    x: number,
-    y: number,
-    isRightClick: boolean,
-  ): void {
+  function handleUpdateTileClick(x: number, y: number): void {
     if (isGameOver || gameBoard[y][x].isDisplayed) {
       return;
     }
 
-    const tile = gameBoard[x][y] as GameTileProp;
-    if (!isRightClick) {
+    const tile = gameBoard[y][x] as GameTileProp;
+    if (!isMark) {
       tile.isDisplayed = true;
       if (tile.isBomb && !tile.isFlagged) {
         setIsGameOver(true);
       }
     } else {
-      tile.isFlagged = true;
+      tile.isFlagged = !tile.isFlagged;
     }
   }
 
@@ -128,6 +119,8 @@ function Minesweeper() {
           gameBoard={gameBoard}
           isGameOver={isGameOver}
           startGameClick={handleStartGameClick}
+          isMark={isMark}
+          toggleIsMark={() => setIsMark(!isMark)}
         />
         {
           <Tiles

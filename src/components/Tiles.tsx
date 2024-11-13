@@ -3,7 +3,7 @@ import Tile from "./Tile";
 interface TilesProps {
   gameBoard: GameTileProp[][];
   isGameOver: boolean;
-  updateTileClick: (x: number, y: number, isRightClick: boolean) => void;
+  updateTileClick: (x: number, y: number) => void;
 }
 
 function Tiles({ gameBoard, isGameOver, updateTileClick }: TilesProps) {
