@@ -104,6 +104,8 @@ function Minesweeper() {
       tile.isDisplayed = true;
       if (tile.isBomb && !tile.isFlagged) {
         setIsGameOver(true);
+      } else if (tile.numberDisplay === "0") {
+        gameBoard[y][x - 1].isDisplayed = true;
       }
     } else {
       tile.isFlagged = !tile.isFlagged;
@@ -114,7 +116,7 @@ function Minesweeper() {
     <>
       {isGameOver && <div>Game over!!</div>}
 
-      <div className="bg-gray-200 border-solid border-4 border-gray-500">
+      <div className="bg-gray-200 border-solid border-4 border-gray-500 w-max">
         <Banner
           gameBoard={gameBoard}
           isGameOver={isGameOver}

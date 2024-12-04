@@ -57,14 +57,15 @@ function Banner({
   }, [isGameOver, timer]);
 
   return (
-    <div className="border-solid border-gray-400 border-4 p-4 grid grid-cols-4">
+    <div className="border-solid border-gray-400 border-4 p-4 grid grid-cols-4 min-w-24">
       <label>
         <input
           type="checkbox"
           checked={isMark}
+          className="mx-3"
           onChange={() => toggleIsMark()}
         />
-        {isMark ? "Mark" : "Click"}
+        {isMark ? ">" : "B"}
       </label>
       <span className="text-red-700 font-bold">{getBombs(gameBoard)}</span>
 

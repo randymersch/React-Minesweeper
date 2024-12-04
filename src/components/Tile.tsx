@@ -22,8 +22,8 @@ function Tile({ tileData, isGameOver, updateTileClick }: TileProp) {
 
   function localClick() {
     updateTileClick(tileData.x, tileData.y);
-    setIsDisplayed(true);
-    setIsFlagged(false);
+    setIsDisplayed(!isFlagged);
+    setIsFlagged(!isFlagged);
   }
 
   return (
