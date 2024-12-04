@@ -1,21 +1,28 @@
+import { GameTileProp } from "./Minesweeper";
 import Tile from "./Tile";
-
-
-function Tiles () {
-
-    return (
-        <div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-<div className="grid grid-cols-9"><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/><Tile/></div>
-</div>
-
-    );
+interface TilesProps {
+  gameBoard: GameTileProp[][];
+  isGameOver: boolean;
+  updateTileClick: (x: number, y: number) => void;
 }
 
+function Tiles({ gameBoard, isGameOver, updateTileClick }: TilesProps) {
+  return (
+    <div>
+      {gameBoard.map((row, x) => (
+        <div key={x} className="flex flex-row">
+          {row.map((column, y) => (
+            <Tile
+              key={`${x}, ${y}`}
+              tileData={column}
+              isGameOver={isGameOver}
+              updateTileClick={updateTileClick}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default Tiles;
